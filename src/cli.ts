@@ -41,11 +41,11 @@ export function runCLI(): void {
       false
     )
     .option("--format <type>", "output format", "xml")
-    .action((directory: string, options: ScannerOptions) => {
+    .action((directory: string, scannerOptions: ScannerOptions) => {
       const resolvedDir = path.resolve(directory);
 
       console.log("Target directory:", resolvedDir);
-      console.log("Options:", options);
+      console.log("Options:", scannerOptions);
     });
 
   program.parse(process.argv);
