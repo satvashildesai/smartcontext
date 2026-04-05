@@ -3,6 +3,7 @@ export interface ScannerOptions {
   ignore?: string[];
   dryRun: boolean;
   maxFileSize?: number;
+  format: OutputFormat;
 }
 
 export interface FileEntry {

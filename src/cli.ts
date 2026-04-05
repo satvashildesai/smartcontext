@@ -40,6 +40,7 @@ export function runCLI(): void {
       "print file list and token count without outputting content",
       false
     )
+    .option("--format <type>", "output format", "xml")
     .action((directory: string, options: ScannerOptions) => {
       const resolvedDir = path.resolve(directory);
 
