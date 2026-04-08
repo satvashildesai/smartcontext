@@ -14,8 +14,14 @@ export function formatOutput(result: ScanResult, format: OutputFormat): string {
 }
 
 export function writeOutput(content: string, outputPath: string): void {
-  writeFileSync(outputPath, content, "utf-8");
-  console.log(`\nOutput written to: ${outputPath}`);
+  try {
+    writeFileSync(outputPath, content, "utf-8");
+    console.log(`\nOutput written to: ${outputPath}`);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error(`\nError: could not write output file — ${message}`);
+    process.exit(1);
+  }
 }
 
 // ─── XML Formatter ───────────────────────────────────────────────────────────

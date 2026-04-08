@@ -5,6 +5,8 @@ import { fileURLToPath } from "url";
 import type { ScannerOptions } from "./types.js";
 import { runScan } from "./scanner.js";
 import { formatOutput, writeOutput } from "./formatter.js";
+import { validateRootDir } from "./validate.js";
+import { ScanError } from "./errors.js";
 
 // ESM doesn't have __dirname — this is the modern replacement
 const __filename = fileURLToPath(import.meta.url);
@@ -44,33 +46,49 @@ export function runCLI(): void {
     )
     .option("--format <type>", "output format", "xml")
     .action(async (directory: string, scannerOptions: ScannerOptions) => {
-      const resolvedDir = path.resolve(directory);
+      try {
+        const resolvedDir = path.resolve(directory);
 
-      const result = await runScan(resolvedDir, scannerOptions);
-
-      console.log(`\nScan complete:`);
-      console.log(`  Files included: ${result.files.length}`);
-      console.log(`  Files skipped:  ${result.skippedFiles.length}`);
-      console.log(`  Total tokens:   ${result.totalTokens.toLocaleString()}`);
-      console.log(`\nContext window usage:`);
-      console.log(describeTokenCount(result.totalTokens));
-
-      if (!scannerOptions.dryRun) {
-        const output = formatOutput(result, scannerOptions.format);
-
-        if (scannerOptions.output) {
-          writeOutput(output, scannerOptions.output);
-        } else {
-          // Print to stdout if no output file specified
-          console.log("\n" + output);
+        try {
+          validateRootDir(resolvedDir);
+        } catch (err) {
+          if (err instanceof ScanError) {
+            console.error(`Error: ${err.message}`);
+            process.exit(1);
+          }
+          throw err; // unexpected error — let it bubble
         }
-      }
 
-      if (scannerOptions.dryRun) {
-        console.log("\nFiles that would be included:");
-        result.files.forEach((f) =>
-          console.log(`  ${f.relativePath} (${f.tokenCount} tokens)`)
-        );
+        const result = await runScan(resolvedDir, scannerOptions);
+
+        console.log(`\nScan complete:`);
+        console.log(`  Files included: ${result.files.length}`);
+        console.log(`  Files skipped:  ${result.skippedFiles.length}`);
+        console.log(`  Total tokens:   ${result.totalTokens.toLocaleString()}`);
+        console.log(`\nContext window usage:`);
+        console.log(describeTokenCount(result.totalTokens));
+
+        if (!scannerOptions.dryRun) {
+          const output = formatOutput(result, scannerOptions.format);
+
+          if (scannerOptions.output) {
+            writeOutput(output, scannerOptions.output);
+          } else {
+            // Print to stdout if no output file specified
+            console.log("\n" + output);
+          }
+        }
+
+        if (scannerOptions.dryRun) {
+          console.log("\nFiles that would be included:");
+          result.files.forEach((f) =>
+            console.log(`  ${f.relativePath} (${f.tokenCount} tokens)`)
+          );
+        }
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        console.error(`\nUnexpected error: ${message}`);
+        process.exit(1);
       }
     });
 
