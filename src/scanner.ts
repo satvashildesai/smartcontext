@@ -4,6 +4,10 @@ import { encode } from "gpt-tokenizer";
 import { FilterEngine } from "./filter.js";
 import type { ScannerOptions, ScanResult, FileEntry } from "./types.js";
 
+function warn(message: string): void {
+  console.warn(`  ⚠ ${message}`);
+}
+
 export async function runScan(
   rootDir: string,
   options: ScannerOptions
@@ -40,7 +44,7 @@ async function walk(
     entries = readdirSync(currentDir, { withFileTypes: true });
   } catch (err) {
     // If we can't read a directory (permissions etc), warn and skip
-    console.warn(`Warning: could not read directory ${currentDir}`);
+    warn(`Could not read directory: ${path.relative(rootDir, currentDir)}`);
     return;
   }
 
@@ -64,6 +68,7 @@ async function walk(
     try {
       stat = statSync(absolutePath);
     } catch {
+      warn(`Could not stat file: ${path.relative(rootDir, absolutePath)}`);
       skippedFiles.push(absolutePath);
       continue;
     }
@@ -92,7 +97,12 @@ async function walk(
       content = readFileSync(absolutePath, "utf-8");
     } catch {
       // Non UTF-8 encoding or other read error — skip safely
-      console.warn(`Warning: could not read file ${absolutePath}`);
+      warn(
+        `Could not read file (encoding?): ${path.relative(
+          rootDir,
+          absolutePath
+        )}`
+      );
       skippedFiles.push(absolutePath);
       continue;
     }
