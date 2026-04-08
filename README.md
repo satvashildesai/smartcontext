@@ -2,10 +2,21 @@
 
 Scan a codebase and format it for LLM context windows.
 
-## Usage
+## Installation
 
 ```bash
+# Run directly without installing
+npx @satvashildesai/smartcontext <directory> [options]
+
+# Or use the short alias
 npx smartcontext <directory> [options]
+
+# Or use the short alias
+npx sc <directory> [options]
+
+# Or install globally
+npm install -g @satvashildesai/smartcontext
+smartcontext <directory> [options]
 ```
 
 ## Options
@@ -22,11 +33,20 @@ npx smartcontext <directory> [options]
 
 ```bash
 # Scan current directory, output XML
-npx smartcontext ./
+npx @satvashildesai/smartcontext ./
+
+# Use short alias
+npx sc ./
 
 # Scan with extra ignores, save to file
-npx smartcontext ./my-project --ignore "*.test.ts" --output context.xml
+npx sc ./my-project --ignore "*.test.ts" --output context.xml
 
 # Check token count before pasting into an LLM
-npx smartcontext ./my-project --dry-run
+npx sc ./my-project --dry-run
+
+# Output as markdown
+npx sc ./my-project --format markdown --output context.md
+
+# Output as plain text
+npx sc ./my-project --format plain --output context.txt
 ```
