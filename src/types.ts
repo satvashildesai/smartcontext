@@ -4,6 +4,7 @@ export interface ScannerOptions {
   dryRun: boolean;
   maxFileSize?: number;
   format: OutputFormat;
+  copy?: boolean;
 }
 
 export interface FileEntry {

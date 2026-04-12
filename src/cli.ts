@@ -7,6 +7,7 @@ import { runScan } from "./scanner.js";
 import { formatOutput, writeOutput } from "./formatter.js";
 import { validateRootDir } from "./validate.js";
 import { ScanError } from "./errors.js";
+import clipboardy from "clipboardy";
 
 // ESM doesn't have __dirname — this is the modern replacement
 const __filename = fileURLToPath(import.meta.url);
@@ -45,6 +46,7 @@ export function runCLI(): void {
       false
     )
     .option("--format <type>", "output format", "xml")
+    .option("--copy", "copy output to clipboard instead of stdout", false)
     .action(async (directory: string, scannerOptions: ScannerOptions) => {
       try {
         const resolvedDir = path.resolve(directory);
@@ -71,7 +73,12 @@ export function runCLI(): void {
         if (!scannerOptions.dryRun) {
           const output = formatOutput(result, scannerOptions.format);
 
-          if (scannerOptions.output) {
+          if (scannerOptions.copy) {
+            await clipboardy.write(output);
+            console.log(
+              `\nOutput copied to clipboard (${result.totalTokens.toLocaleString()} tokens)`
+            );
+          } else if (scannerOptions.output) {
             writeOutput(output, scannerOptions.output);
           } else {
             // Print to stdout if no output file specified
