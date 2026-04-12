@@ -4,6 +4,14 @@
   "description": "Scan a codebase and format it for LLM context windows",
   "type": "module",
   "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/satvashildesai/smartcontext.git"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "bin": {
     "smartcontext": "./dist/index.js",
     "sc": "./dist/index.js"
