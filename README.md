@@ -35,6 +35,7 @@ smartcontext <directory> [options]
 | `-i, --ignore <pattern>`  | Extra ignore pattern, repeatable                 | —       |
 | `--format <type>`         | Output format: `xml`, `markdown`, `plain`        | `xml`   |
 | `--max-file-size <bytes>` | Skip files larger than this size                 | —       |
+| `--copy`                  | Copy output directly to clipboard                | `false` |
 | `--dry-run`               | Preview file list and token count without output | `false` |
 
 ---
@@ -44,6 +45,9 @@ smartcontext <directory> [options]
 ```bash
 # Preview what would be included — no output generated
 sc ./my-project --dry-run
+
+# Scan and copy directly to clipboard — paste straight into any LLM
+sc ./my-project --copy
 
 # Scan and save as XML (default format)
 sc ./my-project --output context.xml
@@ -73,6 +77,7 @@ sc ./my-project --format markdown --ignore dist --output context.md
 - Respects your `.gitignore` patterns
 - Detects and skips binary files by content — not just extension
 - Estimates token usage against major LLM context windows before you paste anything
+- Copies output directly to clipboard with `--copy` — no file needed
 - Outputs structured, LLM-ready content in XML, Markdown, or Plain text
 
 ### Token estimation
