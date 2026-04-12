@@ -22,7 +22,14 @@
     "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": [
+    "llm-context",
+    "codebase-scanner",
+    "code-to-prompt",
+    "token-estimator",
+    "gitignore-aware",
+    "cli"
+  ],
   "author": "Satvashil Desai",
   "license": "ISC",
   "dependencies": {
