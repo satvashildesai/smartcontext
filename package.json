@@ -1,6 +1,6 @@
 {
   "name": "@satvashildesai/smartcontext",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Scan a codebase and format it for LLM context windows",
   "type": "module",
   "main": "dist/index.js",
